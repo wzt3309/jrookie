@@ -7,14 +7,16 @@
     <groupId>io.github.xg</groupId>
     <artifactId>jrookie-parent</artifactId>
     <version>${revision}</version>
-    <modules>
-        <module>jrookie</module>
-        <module>jrookie-core</module>
-    </modules>
     <packaging>pom</packaging>
     <name>Jrookie Parent</name>
     <description>Jrookie is an simple java blog system</description>
 
+    <modules>
+        <module>jrookie</module>
+        <module>jrookie-core</module>
+        <module>jrookie-common</module>
+    </modules>
+    
     <properties>
         <revision>1.0-SNAPSHOT</revision>
         <java.version>1.8</java.version>
