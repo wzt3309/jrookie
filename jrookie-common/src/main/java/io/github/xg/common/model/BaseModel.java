@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * Base Model
+ * Base Model.
  * @author wzt3309 2019/07/14
  */
 @MappedSuperclass
@@ -19,7 +19,7 @@ public abstract class BaseModel<ID extends Serializable> implements Serializable
     private ID id;
 
     /**
-     * Create timestamp
+     * Create timestamp.
      */
     @Column(
             name = "create_time",
@@ -30,7 +30,7 @@ public abstract class BaseModel<ID extends Serializable> implements Serializable
     private LocalDateTime createTime;
 
     /**
-     * Update timestamp
+     * Update timestamp.
      */
     @Column(
             name = "update_time",
@@ -40,13 +40,13 @@ public abstract class BaseModel<ID extends Serializable> implements Serializable
     private LocalDateTime updateTime;
 
     /**
-     * Delete flag
+     * Delete flag.
      */
     @Column(name = "deleted", columnDefinition = "tinyint default 0 ")
     private boolean deleted = false;
 
     /**
-     * Set create time and update time when the model is persisting (not happen in db yet)
+     * Set create time and update time when the model is persisting (not happen in db yet).
      */
     @PrePersist
     protected void prePersist() {
@@ -62,7 +62,7 @@ public abstract class BaseModel<ID extends Serializable> implements Serializable
     }
 
     /**
-     * Set update time when the model is updating (not happen in db yet)
+     * Set update time when the model is updating (not happen in db yet).
      */
     @PreUpdate
     protected void preUpdate() {
@@ -70,7 +70,7 @@ public abstract class BaseModel<ID extends Serializable> implements Serializable
     }
 
     /**
-     * Set update time and delete flag when the mode is removing (not happen in db yet)
+     * Set update time and delete flag when the mode is removing (not happen in db yet).
      */
     @PreRemove
     protected void preRemove() {
