@@ -11,12 +11,12 @@ public final class ServiceUtils {
     private ServiceUtils() {}
 
     /**
-     * Checks if the given number is empty id.
+     * Checks if the given number is empty.
      *
-     * @param id the given number id
-     * @return true if the given number is empty id, otherwise false
+     * @param id The given number
+     * @return true if the given number is empty, otherwise false
      */
-    public static boolean isEmptyId(Number id) {
+    public static boolean isEmpty(Number id) {
         return id == null || id.longValue() <= 0;
     }
 }

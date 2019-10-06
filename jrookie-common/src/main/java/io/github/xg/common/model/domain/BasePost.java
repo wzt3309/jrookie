@@ -6,9 +6,6 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 import io.github.xg.common.model.enums.PostCreateFrom;
@@ -18,7 +15,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 
-import static io.github.xg.common.utils.ServiceUtils.isEmptyId;
+import static io.github.xg.common.utils.ServiceUtils.isEmpty;
 
 /**
  * Base post DO.
@@ -32,21 +29,17 @@ import static io.github.xg.common.utils.ServiceUtils.isEmptyId;
 @DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.INTEGER, columnDefinition = "int default 0")
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class BasePost extends BaseDO<Long> {
+public class BasePost extends BaseDO {
     private static final long serialVersionUID = 3420736514267636524L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     /**
-     * Post status.
+     * (Optional) Post status.
      */
     @Column(name = "status", columnDefinition = "tinyint default 0")
     private PostStatus status;
 
     /**
-     * Post create from.
+     * (Optional) Post create from.
      */
     @Column(name = "create_from", columnDefinition = "tinyint default 0")
     private PostCreateFrom createFrom;
@@ -76,49 +69,49 @@ public class BasePost extends BaseDO<Long> {
     private String formatContent;
 
     /**
-     * Summary of post.
+     * (Optional) Summary of post.
      */
     @Column(name = "summary", columnDefinition = "varchar(512) ''")
     private String summary;
 
     /**
-     * Cover thumbnail of post.
+     * (Optional) Cover thumbnail of post.
      */
     @Column(name = "thumbnail", columnDefinition = "varchar(1024) ''")
     private String thumbnail;
 
     /**
-     * Post visits.
+     * (Optional) Post visits.
      */
     @Column(name = "visits", columnDefinition = "bigint default 0")
     private Long visits;
 
     /**
-     * Post likes.
+     * (Optional) Post likes.
      */
     @Column(name = "likes", columnDefinition = "bigint default 0")
     private Long likes;
 
     /**
-     * Whether to allow comment.
+     * (Optional) Whether to allow comment.
      */
     @Column(name = "is_allow_comment", columnDefinition = "tinyint default 0")
     private Boolean isAllowComment;
 
     /**
-     * Post password.
+     * (Optional) Post password.
      */
     @Column(name = "password", columnDefinition = "varchar(255) default ''")
     private String password;
 
     /**
-     * Custom template.
+     * (Optional) Custom template.
      */
     @Column(name = "template", columnDefinition = "varchar(255) default ''")
     private String template;
 
     /**
-     * Whether to top the post.
+     * (Optional) Whether to top the post.
      */
     @Column(name = "top_priority", columnDefinition = "tinyint default 0")
     private Integer topPriority;
@@ -132,10 +125,6 @@ public class BasePost extends BaseDO<Long> {
     @Override
     protected void prePersist() {
         super.prePersist();
-
-        if (isEmptyId(id)) {
-            id = null;
-        }
 
         if (editTime == null) {
             editTime = getCreateTime();
@@ -173,11 +162,11 @@ public class BasePost extends BaseDO<Long> {
             createFrom = PostCreateFrom.ADMIN;
         }
 
-        if (visits == null || visits < 0) {
+        if (isEmpty(visits)) {
             visits = 0L;
         }
 
-        if (likes == null || likes < 0) {
+        if (isEmpty(likes)) {
             likes = 0L;
         }
     }

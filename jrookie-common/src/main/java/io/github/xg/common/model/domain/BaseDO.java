@@ -4,15 +4,17 @@ import java.io.Serializable;
 import java.time.Instant;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 
 import lombok.Data;
+
+import static io.github.xg.common.utils.ServiceUtils.isEmpty;
 
 /**
  * Base domain object.
@@ -21,29 +23,23 @@ import lombok.Data;
  */
 @MappedSuperclass
 @Data
-public abstract class BaseDO<ID extends Serializable> implements Serializable {
+public abstract class BaseDO implements Serializable {
     private static final long serialVersionUID = -2564132965815330577L;
 
-    @Transient
-    private ID id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     /**
      * Create timestamp.
      */
-    @Column(
-        name = "create_time",
-        nullable = false,
-        updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "create_time", nullable = false, updatable = false)
     private Instant createTime;
 
     /**
      * Update timestamp.
      */
-    @Column(
-        name = "update_time",
-        nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "update_time", nullable = false)
     private Instant updateTime;
 
     /**
@@ -58,6 +54,10 @@ public abstract class BaseDO<ID extends Serializable> implements Serializable {
     @PrePersist
     protected void prePersist() {
         deleted = false;
+
+        if (isEmpty(id)) {
+            id = null;
+        }
 
         if (createTime == null) {
             createTime = Instant.now();

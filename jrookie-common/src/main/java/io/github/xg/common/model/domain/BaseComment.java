@@ -4,9 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 import io.github.xg.common.model.enums.CommentStatus;
@@ -15,7 +12,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 
-import static io.github.xg.common.utils.ServiceUtils.isEmptyId;
+import static io.github.xg.common.utils.ServiceUtils.isEmpty;
 
 /**
  * Base comment DO.
@@ -29,12 +26,8 @@ import static io.github.xg.common.utils.ServiceUtils.isEmptyId;
 @DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.INTEGER, columnDefinition = "int default 0")
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class BaseComment extends BaseDO<Long> {
+public class BaseComment extends BaseDO {
     private static final long serialVersionUID = -8099440207840229999L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     /**
      * Commentator's name.
@@ -49,19 +42,19 @@ public class BaseComment extends BaseDO<Long> {
     private String email;
 
     /**
-     * Commentator's ip address.
+     * (Optional) Commentator's ip address.
      */
     @Column(name = "ip_address", columnDefinition = "varchar(128) default ''")
     private String ipAddress;
 
     /**
-     * Commentator's website.
+     * (Optional) Commentator's website.
      */
     @Column(name = "author_url", columnDefinition = "varchar(512) default ''")
     private String authorUrl;
 
     /**
-     * Commentator's gravatar md5.
+     * (Optional) Commentator's gravatar md5.
      *
      * @see <a href="https://cn.gravatar.com/site/implement/images/java/">How To Use Gravatar in Java</a>
      */
@@ -75,19 +68,19 @@ public class BaseComment extends BaseDO<Long> {
     private String content;
 
     /**
-     * Comment status.
+     * (Optional) Comment status.
      */
     @Column(name = "status", columnDefinition = "int default 0")
     private CommentStatus status;
 
     /**
-     * Commentator's agent.
+     * (Optional) Commentator's agent.
      */
     @Column(name = "user_agent", columnDefinition = "varchar(512) default ''")
     private String userAgent;
 
     /**
-     * Is admin comment.
+     * (Optional) Is admin comment.
      */
     @Column(name = "is_admin", columnDefinition = "tinyint default 0")
     private Boolean isAdmin;
@@ -99,13 +92,13 @@ public class BaseComment extends BaseDO<Long> {
     private Long postId;
 
     /**
-     * Whether to top the comment.
+     * (Optional) Whether to top the comment.
      */
     @Column(name = "top_priority", columnDefinition = "int default 0")
     private Integer topPriority;
 
     /**
-     * Parent comment.
+     * (Optional) Parent comment.
      */
     @Column(name = "parent_id", columnDefinition = "bigint default 0")
     private Long parentId;
@@ -114,12 +107,12 @@ public class BaseComment extends BaseDO<Long> {
     protected void prePersist() {
         super.prePersist();
 
-        if (isEmptyId(id)) {
-            id = null;
+        if (isEmpty(parentId)) {
+            parentId = 0L;
         }
 
-        if (isEmptyId(parentId)) {
-            parentId = 0L;
+        if (isEmpty(topPriority)) {
+            topPriority = 0;
         }
 
         if (ipAddress == null) {

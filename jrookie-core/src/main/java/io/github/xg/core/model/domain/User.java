@@ -1,21 +1,16 @@
-package io.github.xg.common.model.domain;
+package io.github.xg.core.model.domain;
 
 import java.time.Instant;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
+import io.github.xg.common.model.domain.BaseDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
-
-import static io.github.xg.common.utils.ServiceUtils.isEmptyId;
 
 /**
  * User domain.
@@ -28,13 +23,8 @@ import static io.github.xg.common.utils.ServiceUtils.isEmptyId;
 @Table(name = "user")
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class User extends BaseDO<Long> {
+public class User extends BaseDO {
     private static final long serialVersionUID = -1138986165811706007L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
 
     /**
      * User name.
@@ -55,19 +45,19 @@ public class User extends BaseDO<Long> {
     private String nickname;
 
     /**
-     * User email.
+     * (Optional) User email.
      */
     @Column(name = "email", columnDefinition = "varchar(127) default ''")
     private String email;
 
     /**
-     * User avatar.
+     * (Optional) User avatar.
      */
     @Column(name = "avatar", columnDefinition = "varchar(1023) default ''")
     private String avatar;
 
     /**
-     * User description.
+     * (Optional) User description.
      */
     @Column(name = "description", columnDefinition = "varchar(1023) default ''")
     private String description;
@@ -78,14 +68,9 @@ public class User extends BaseDO<Long> {
     @Column(name = "expire_time")
     private Instant expireTime;
 
-    @PrePersist
     @Override
     public void prePersist() {
         super.prePersist();
-
-        if (isEmptyId(id)) {
-            id = null;
-        }
 
         if (email == null) {
             email = StringUtils.EMPTY;
