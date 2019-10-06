@@ -1,4 +1,4 @@
-package io.github.xg.common.model;
+package io.github.xg.common.model.domain;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
@@ -14,40 +14,39 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Base comment model.
+ * Base meta DO.
+ *
  * @author xingguan.wzt
- * @date 2019/07/21
+ * @date 2019/10/06
  */
 @Data
 @Entity
-@Table(name = "BASE_COMMENT")
+@Table(name = "meta")
 @DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.INTEGER, columnDefinition = "int default 0")
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class BaseComment extends BaseModel {
+public class BaseMeta extends BaseDO<Long> {
+    private static final long serialVersionUID = 7518658749891152305L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
-     * Commentator's name.
+     * Post id.
      */
-    @Column(name = "author", columnDefinition = "varchar(50) not null")
-    private String author;
+    @Column(name = "post_id", columnDefinition = "bigint not null")
+    private Long postId;
 
     /**
-     * Commentator's email.
+     * Meta key.
      */
-    @Column(name = "email", columnDefinition = "varchar(255) not null")
-    private String email;
+    @Column(name = "meta_key", columnDefinition = "varchar(100) not null")
+    private String key;
 
     /**
-     * Commentator's ip address.
+     * Meta value.
      */
-    @Column(name = "ip_address", columnDefinition = "varchar(127) default ''")
-    private String ipAddress;
-
-
-
+    @Column(name = "meta_value", columnDefinition = "varchar(1023) not null")
+    private String value;
 }

@@ -1,19 +1,28 @@
-package io.github.xg.common.model;
+package io.github.xg.common.model.domain;
 
-import io.github.xg.common.utils.DateUtils;
+import java.io.Serializable;
+import java.time.Instant;
+
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.PrePersist;
+import javax.persistence.PreRemove;
+import javax.persistence.PreUpdate;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
 import lombok.Data;
 
-import javax.persistence.*;
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
 /**
- * Base Model.
+ * Base domain object.
+ *
  * @author wzt3309 2019/07/14
  */
 @MappedSuperclass
 @Data
-public abstract class BaseModel<ID extends Serializable> implements Serializable {
+public abstract class BaseDO<ID extends Serializable> implements Serializable {
+    private static final long serialVersionUID = -2564132965815330577L;
 
     @Transient
     private ID id;
@@ -22,28 +31,26 @@ public abstract class BaseModel<ID extends Serializable> implements Serializable
      * Create timestamp.
      */
     @Column(
-            name = "create_time",
-            nullable = false,
-            updatable = false,
-            columnDefinition = "timestamp default CURRENT_TIMESTAMP")
+        name = "create_time",
+        nullable = false,
+        updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime createTime;
+    private Instant createTime;
 
     /**
      * Update timestamp.
      */
     @Column(
-            name = "update_time",
-            nullable = false,
-            columnDefinition = "timestamp default CURRENT_TIMESTAMP")
+        name = "update_time",
+        nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime updateTime;
+    private Instant updateTime;
 
     /**
      * Delete flag.
      */
     @Column(name = "deleted", columnDefinition = "tinyint default 0 ")
-    private boolean deleted = false;
+    private Boolean deleted;
 
     /**
      * Set create time and update time when the model is persisting (not happen in db yet).
@@ -52,12 +59,11 @@ public abstract class BaseModel<ID extends Serializable> implements Serializable
     protected void prePersist() {
         deleted = false;
 
-        LocalDateTime now = DateUtils.now();
         if (createTime == null) {
-            createTime = now;
+            createTime = Instant.now();
         }
         if (updateTime == null) {
-            updateTime = now;
+            updateTime = Instant.now();
         }
     }
 
@@ -66,7 +72,7 @@ public abstract class BaseModel<ID extends Serializable> implements Serializable
      */
     @PreUpdate
     protected void preUpdate() {
-        updateTime = DateUtils.now();
+        updateTime = Instant.now();
     }
 
     /**
@@ -75,6 +81,6 @@ public abstract class BaseModel<ID extends Serializable> implements Serializable
     @PreRemove
     protected void preRemove() {
         deleted = true;
-        updateTime = DateUtils.now();
+        updateTime = Instant.now();
     }
 }
